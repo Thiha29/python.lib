@@ -1,0 +1,5 @@
+pc3@DESKTOP-4CN4OCL MINGW64 /e/work/52pojie/python.lib
+$ pip install numpy-1.13.1-cp27-none-win32.whl
+Processing e:\work\52pojie\python.lib\numpy-1.13.1-cp27-none-win32.whl
+Installing collected packages: numpy
+Successfully installed numpy-1.13.1
