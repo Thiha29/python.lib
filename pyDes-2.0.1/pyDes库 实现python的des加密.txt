@@ -1,0 +1,84 @@
+pyDes库 实现python的des加密
+
+下载及简介地址：https://twhiteman.netfirms.com/des.html
+
+如需要在python中使用des加密，可以直接使用pyDes库加密，该库提供了CBC和ECB两种加密方式。
+
+ 
+
+1、Windows下安装
+
+　　下载后pyDes-x.x.x.zip并解压后，里面有setup.py文件，使用命令 setup.py --help可查看详细使用。
+
+　　你可以使用命令 python setup.py install 命令安装，也可以直接将压缩包内的pyDes.py拷贝到本地的python lib库下直接开始使用
+
+ 
+
+2、 使用
+
+　　使用参数如下（拷贝自上述提供的地址）：
+
+Class initialization
+--------------------
+pyDes.des(key, [mode], [IV], [pad], [padmode])
+pyDes.triple_des(key, [mode], [IV], [pad], [padmode])
+
+key     -> Bytes containing the encryption key. 8 bytes for DES, 16 or 24 bytes
+	   for Triple DES
+mode    -> Optional argument for encryption type, can be either
+	   pyDes.ECB (Electronic Code Book) or pyDes.CBC (Cypher Block Chaining)
+IV      -> Optional Initial Value bytes, must be supplied if using CBC mode.
+	   Length must be 8 bytes.
+pad     -> Optional argument, set the pad character (PAD_NORMAL) to use during
+	   all encrypt/decrpt operations done with this instance.
+padmode -> Optional argument, set the padding mode (PAD_NORMAL or PAD_PKCS5)
+	   to use during all encrypt/decrpt operations done with this instance.
+
+I recommend to use PAD_PKCS5 padding, as then you never need to worry about any
+padding issues, as the padding can be removed unambiguously upon decrypting
+data that was encrypted using PAD_PKCS5 padmode.
+
+Common methods
+--------------
+encrypt(data, [pad], [padmode])
+decrypt(data, [pad], [padmode])
+
+data    -> Bytes to be encrypted/decrypted
+pad     -> Optional argument. Only when using padmode of PAD_NORMAL. For
+	   encryption, adds this characters to the end of the data block when
+	   data is not a multiple of 8 bytes. For decryption, will remove the
+	   trailing characters that match this pad character from the last 8
+	   bytes of the unencrypted data block.
+padmode -> Optional argument, set the padding mode, must be one of PAD_NORMAL
+	   or PAD_PKCS5). Defaults to PAD_NORMAL
+
+Example
+-------
+from pyDes import *
+
+# For Python3, you'll need to use bytes, i.e.:
+#   data = b"Please encrypt my data"
+#   k = des(b"DESCRYPT", CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
+
+data = "Please encrypt my data"
+k = des("DESCRYPT", CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
+d = k.encrypt(data)
+print "Encrypted: %r" % d
+print "Decrypted: %r" % k.decrypt(d)
+assert k.decrypt(d, padmode=PAD_PKCS5) == dat
+
+以下是本人使用的例子,使用CBC加密的方式：
+复制代码
+import base64
+from pyDes import *
+
+Des_Key = "BHC#@*UM" # Key
+Des_IV = "\x22\x33\x35\x81\xBC\x38\x5A\xE7" # 自定IV向量
+
+def DesEncrypt(str):
+    k = des(Des_Key, CBC, Des_IV, pad=None, padmode=PAD_PKCS5)
+
+    EncryptStr = k.encrypt(str)
+
+    return base64.b64encode(EncryptStr) #转base64编码返回
+复制代码
